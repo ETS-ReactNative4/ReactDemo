@@ -4,16 +4,41 @@ import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit'
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    console.log("[App.js] constructor");
+  }
   state = {
     persons: [
       { id: "asdfasdf", name: 'Max', age: 28 },
       { id: "asdfasse", name: 'Manu', age: 29 },
       { id: "asdfasqw", name: 'Stephanie', age: 26 }
     ],
-    showPersons: false
+    showPersons: false,
+    showCockpit: true
+  }
+  static getDerivedStateFromProps(props, state){
+    console.log("[App.js] getDerivedStateFromProps", props);
+    return state;
+  }
+
+  // componentWillMount(){
+  //   console.log("componentWillMount");
+  // }
+
+  componentDidMount(){
+    console.log('[App.js] componentDidMount');
+  }
+  shouldComponentUpdate(nextProps,nextState){
+    console.log('[App.js] shouldComponentUpdate');
+    return true;
+    
+  }
+  componentDidUpdate(){
+    console.log('[App.js] componentDidUpdate');
   }
   nameChangedHandler = (event, id) => {
-    console.log(event);
+    // console.log(event);
     const personIndex = this.state.persons.findIndex(p =>{
       return p.id ===id;
     });
@@ -36,6 +61,9 @@ class App extends Component {
     this.setState({showPersons: !doesShow})
   }
   render () {
+    console.log(
+      "[App.js] render "
+    )
     let persons = null;
     if (this.state.showPersons){
       persons = (
@@ -48,11 +76,16 @@ class App extends Component {
     return (
       
       <div className={classes.App}>
-        <Cockpit 
-          title={this.props.appTitle}
-          showPersons={this.state.showPersons} 
-          persons={this.state.persons}
-          clicked={this.togglePersonsHandler}/>
+        <button onClick={()=>{this.setState({showCockpit: false})}}>Remove Cockpit</button>
+        {this.state.showCockpit?
+          <Cockpit 
+            title={this.props.appTitle}
+            showPersons={this.state.showPersons} 
+            personsLength={this.state.persons.length}
+            clicked={this.togglePersonsHandler}/>
+            :
+            null
+        }
         {persons}       
       </div>      
     );   
